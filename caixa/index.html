@@ -253,15 +253,24 @@
       overflow: hidden;
     }
 
-    .chocolate-box:hover .cover,
     .chocolate-box.is-open .cover {
       transform: rotateX(170deg);
       box-shadow: 8px -8px 32px rgba(0,0,0,.5);
     }
 
-    .chocolate-box:hover .cover:before,
     .chocolate-box.is-open .cover:before {
       display: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .chocolate-box:hover .cover {
+        transform: rotateX(170deg);
+        box-shadow: 8px -8px 32px rgba(0,0,0,.5);
+      }
+
+      .chocolate-box:hover .cover:before {
+        display: none;
+      }
     }
 
     .cover:before {
