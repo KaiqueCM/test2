@@ -394,8 +394,8 @@
         </div>
 
         <div class="form-grid">
-          <div class="field half" data-required="true">
-            <label for="mainTitle">Titulo da pagina</label>
+          <div class="field half">
+            <label for="mainTitle">Titulo da pagina (opcional)</label>
             <input id="mainTitle" type="text" placeholder="Ex.: Para voce, meu amor" />
           </div>
 
@@ -549,7 +549,6 @@
     };
 
     const requiredInputs = [
-      els.mainTitle,
       ...els.chocolateInputs.filter((input) => input.dataset.key === "message")
     ];
 

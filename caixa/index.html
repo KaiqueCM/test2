@@ -896,6 +896,7 @@
 
     function normalizeGiftData(rawData) {
       const incoming = rawData || {};
+      const hasIncomingMusic = Object.prototype.hasOwnProperty.call(incoming, "music");
       const chocolates = defaultGiftData.chocolates.map((fallback, index) => {
         const next = incoming.chocolates?.[index] || {};
         return {
@@ -908,7 +909,7 @@
       return {
         mainTitle: incoming.mainTitle || incoming.title || defaultGiftData.mainTitle,
         coverText: incoming.coverText || defaultGiftData.coverText,
-        music: incoming.music || defaultGiftData.music,
+        music: hasIncomingMusic ? incoming.music : defaultGiftData.music,
         chocolates
       };
     }
