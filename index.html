@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Presente digital</title>
+  <link rel="icon" type="image/png" href="./caixa/images/nk-logo.png" />
+  <link rel="apple-touch-icon" href="./caixa/images/nk-logo.png" />
+  <meta name="author" content="NexKai" />
+  <meta name="copyright" content="Copyright (c) 2026 NexKai. Todos os direitos reservados." />
+  <meta name="description" content="Crie uma caixa de chocolates digital personalizada." />
+  <meta property="og:title" content="Uma surpresa especial" />
+  <meta property="og:description" content="Uma caixa de chocolates digital feita com carinho." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Uma surpresa especial" />
+  <meta name="twitter:description" content="Uma caixa de chocolates digital feita com carinho." />
+  <style>
+    :root {
+      --bg-top: #2b1718;
+      --bg-mid: #713136;
+      --bg-bottom: #f3b6aa;
+      --cream: #fff4df;
+      --paper: rgba(255, 248, 235, 0.12);
+      --paper-strong: rgba(255, 248, 235, 0.18);
+      --line: rgba(255, 244, 223, 0.22);
+      --red: #c92c28;
+      --red-dark: #7f1516;
+      --gold: #f4ce83;
+      --text: #fff9ee;
+      --muted: rgba(255, 249, 238, 0.72);
+      --shadow: 0 20px 60px rgba(22, 4, 6, 0.34);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100vh;
+      min-height: 100lvh;
+      background-color: var(--bg-bottom);
+      background:
+        radial-gradient(circle at 20% 16%, rgba(244, 206, 131, 0.16), transparent 24%),
+        radial-gradient(circle at 86% 8%, rgba(255, 244, 223, 0.13), transparent 22%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-mid) 54%, var(--bg-bottom));
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 16%, rgba(244, 206, 131, 0.16), transparent 24%),
+        radial-gradient(circle at 86% 8%, rgba(255, 244, 223, 0.13), transparent 22%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-mid) 54%, var(--bg-bottom));
+      overflow-x: hidden;
+    }
+
+    body {
+      background-color: var(--bg-bottom);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.8), transparent 78%);
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 56px;
+    }
+
+    .view { display: none; }
+    .view.is-active { display: block; }
+
+    .hero {
+      min-height: calc(100vh - 80px);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px 0;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .hero-inner,
+    .panel {
+      width: min(860px, 100%);
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, var(--paper-strong), var(--paper));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+    }
+
+    .hero-inner {
+      padding: clamp(28px, 6vw, 56px);
+    }
+
+    h1, h2, h3, p { overflow-wrap: anywhere; }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      margin-inline: auto;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 6vw, 68px);
+      line-height: 1.02;
+    }
+
+    .subtitle {
+      width: min(42ch, 100%);
+      margin: 16px auto 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    button, .button-link {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      min-height: 48px;
+      border-radius: 16px;
+      padding: 13px 18px;
+      font: inherit;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .18s ease, opacity .18s ease, border-color .18s ease;
+    }
+
+    button:hover, .button-link:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ffe0a2, #f4a261);
+      color: #4c2017;
+      box-shadow: 0 12px 30px rgba(244, 162, 97, .26);
+    }
+
+    .btn-secondary,
+    .example-button {
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .panel {
+      margin: 0 auto;
+      padding: clamp(18px, 4vw, 32px);
+    }
+
+    .panel-header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.08;
+    }
+
+    .example-button {
+      min-height: 52px;
+      border-radius: 16px;
+    }
+
+    .example-button.is-compact {
+      width: fit-content;
+      min-height: 40px;
+      padding: 9px 16px;
+      justify-self: center;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    .example-picker {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 8px 0 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full,
+    .chocolate-editor {
+      grid-column: 1 / -1;
+    }
+
+    .field.half {
+      grid-column: auto;
+    }
+
+    label {
+      color: var(--cream);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.09);
+      color: var(--text);
+      padding: 13px 14px;
+      outline: none;
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 104px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    select option {
+      background: #fff8ef;
+      color: #3d1b16;
+    }
+
+    input::placeholder,
+    textarea::placeholder { color: rgba(255, 249, 238, .48); }
+
+    .field.is-invalid label { color: #ffc3c3; }
+    .field.is-invalid input,
+    .field.is-invalid textarea,
+    .field.is-invalid select {
+      border-color: rgba(255, 153, 153, .95);
+      box-shadow: 0 0 0 2px rgba(255, 153, 153, .16);
+    }
+
+    .chocolate-editor {
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(35, 10, 9, .16);
+      border-radius: 18px;
+    }
+
+    .chocolate-editor h3 {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: 18px;
+    }
+
+    .copy-box {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.08);
+      color: var(--muted);
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    .copy-box.show { display: block; }
+    .hidden { display: none !important; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      z-index: 30;
+      transform: translateX(-50%) translateY(16px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: rgba(38, 8, 10, .9);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      transition: .22s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .nexkai-credit {
+      position: fixed;
+      right: 14px;
+      bottom: 12px;
+      z-index: 20;
+      color: rgba(255, 249, 238, 0.66);
+      font-size: 11px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      pointer-events: none;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, .35);
+    }
+
+    body.is-builder-active .nexkai-credit {
+      position: static;
+      width: fit-content;
+      margin: 18px auto 0;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      .shell { width: min(100% - 18px, 1080px); padding-top: 10px; }
+      .hero { min-height: calc(100vh - 20px); }
+      .hero-inner, .panel {
+        width: min(100%, calc(100vw - 18px));
+        max-width: calc(100vw - 18px);
+        overflow: hidden;
+        border-radius: 20px;
+      }
+      h1 {
+        font-size: clamp(30px, 9vw, 38px);
+        line-height: 1.08;
+        max-width: 11ch;
+        overflow-wrap: anywhere;
+      }
+      .subtitle {
+        font-size: 15px;
+        line-height: 1.55;
+        width: min(28ch, 100%);
+      }
+      .form-grid,
+      .example-picker { grid-template-columns: 1fr; }
+      .actions { flex-direction: column; }
+      button, .button-link { width: 100%; }
+      textarea { min-height: 96px; }
+      .nexkai-credit {
+        left: 12px;
+        right: auto;
+        font-size: 10px;
+      }
+      body.is-builder-active .nexkai-credit {
+        margin-top: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="view is-active" id="introView">
+      <div class="hero">
+        <article class="hero-inner">
+          <h1>Crie uma caixa de chocolates personalizada.</h1>
+          <div class="actions">
+            <button class="btn-primary" id="startFlowBtn">Comecar agora</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" id="builderView">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Monte sua surpresa</h2>
+        </div>
+
+        <div class="example-picker" aria-label="Exemplos prontos">
+          <button type="button" class="example-button is-compact" id="openExampleBtn">Ver exemplo</button>
+        </div>
+
+        <div class="form-grid">
+          <div class="field half" data-required="true">
+            <label for="mainTitle">Titulo da pagina</label>
+            <input id="mainTitle" type="text" placeholder="Ex.: Para voce, meu amor" />
+          </div>
+
+          <div class="field half">
+            <label for="musicUrl">Musica</label>
+            <select id="musicUrl">
+              <option value="">Sem musica</option>
+              <option value="musica/Ed Sheeran - Photograph.mp3">Ed Sheeran - Photograph</option>
+              <option value="musica/James Arthur - Can I Be Him.mp3">James Arthur - Can I Be Him</option>
+              <option value="musica/James Arthur - Say You Won't Let Go.mp3">James Arthur - Say You Won't Let Go</option>
+              <option value="musica/Lauv - Paris in the Rain.mp3">Lauv - Paris in the Rain</option>
+              <option value="musica/Sleeping At Last - Turning Page.mp3">Sleeping At Last - Turning Page</option>
+            </select>
+          </div>
+
+          <section class="chocolate-editor">
+            <h3>Chocolate 1</h3>
+            <div class="form-grid">
+              <div class="field">
+                <label for="choco1Name">Nome ao passar o mouse (opcional)</label>
+                <input id="choco1Name" data-key="name" data-index="0" type="text" placeholder="Trufa de chocolate" />
+              </div>
+              <div class="field">
+                <label for="choco1Title">Titulo do chocolate (opcional)</label>
+                <input id="choco1Title" data-key="title" data-index="0" type="text" placeholder="Voce e minha docura" />
+              </div>
+              <div class="field full" data-required="true">
+                <label for="choco1Message">Texto abaixo do titulo</label>
+                <textarea id="choco1Message" data-key="message" data-index="0" placeholder="Escreva a mensagem deste chocolate."></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="chocolate-editor">
+            <h3>Chocolate 2</h3>
+            <div class="form-grid">
+              <div class="field">
+                <label for="choco2Name">Nome ao passar o mouse (opcional)</label>
+                <input id="choco2Name" data-key="name" data-index="1" type="text" placeholder="Chocolate branco" />
+              </div>
+              <div class="field">
+                <label for="choco2Title">Titulo do chocolate (opcional)</label>
+                <input id="choco2Title" data-key="title" data-index="1" type="text" placeholder="Meu amor puro" />
+              </div>
+              <div class="field full" data-required="true">
+                <label for="choco2Message">Texto abaixo do titulo</label>
+                <textarea id="choco2Message" data-key="message" data-index="1" placeholder="Escreva a mensagem deste chocolate."></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="chocolate-editor">
+            <h3>Chocolate 3</h3>
+            <div class="form-grid">
+              <div class="field">
+                <label for="choco3Name">Nome ao passar o mouse (opcional)</label>
+                <input id="choco3Name" data-key="name" data-index="2" type="text" placeholder="Chocolate ao leite" />
+              </div>
+              <div class="field">
+                <label for="choco3Title">Titulo do chocolate (opcional)</label>
+                <input id="choco3Title" data-key="title" data-index="2" type="text" placeholder="Juntos para sempre" />
+              </div>
+              <div class="field full" data-required="true">
+                <label for="choco3Message">Texto abaixo do titulo</label>
+                <textarea id="choco3Message" data-key="message" data-index="2" placeholder="Escreva a mensagem deste chocolate."></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="chocolate-editor">
+            <h3>Chocolate 4</h3>
+            <div class="form-grid">
+              <div class="field">
+                <label for="choco4Name">Nome ao passar o mouse (opcional)</label>
+                <input id="choco4Name" data-key="name" data-index="3" type="text" placeholder="Trufa especial" />
+              </div>
+              <div class="field">
+                <label for="choco4Title">Titulo do chocolate (opcional)</label>
+                <input id="choco4Title" data-key="title" data-index="3" type="text" placeholder="Voce e especial" />
+              </div>
+              <div class="field full" data-required="true">
+                <label for="choco4Message">Texto abaixo do titulo</label>
+                <textarea id="choco4Message" data-key="message" data-index="3" placeholder="Escreva a mensagem deste chocolate."></textarea>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" id="generateBtn">Gerar link</button>
+          <button class="btn-secondary" id="clearBtn">Limpar</button>
+        </div>
+
+        <div class="copy-box" id="linkBox"></div>
+
+        <div class="actions">
+          <button class="btn-primary hidden" id="copyBtn">Copiar link</button>
+          <a class="button-link btn-secondary hidden" id="openGiftLink" target="_blank" rel="noopener noreferrer">Abrir presente</a>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+  <div class="nexkai-credit" aria-label="Creditos">Desenvolvido por NexKai</div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const defaultData = {
+      mainTitle: "Para voce, meu amor",
+      coverText: "Clique aqui",
+      music: "musica/James Arthur - Say You Won't Let Go.mp3",
+      chocolates: [
+        {
+          name: "Trufa de chocolate",
+          title: "Voce e minha docura",
+          message: "Cada momento com voce e tao doce quanto este chocolate. Eu te amo com todo o meu coracao."
+        },
+        {
+          name: "Chocolate branco",
+          title: "Meu amor puro",
+          message: "Assim como o chocolate branco, meu amor por voce e puro e sincero. Voce e a melhor coisa da minha vida."
+        },
+        {
+          name: "Chocolate ao leite",
+          title: "Juntos para sempre",
+          message: "Assim como o chocolate ao leite, nos somos a combinacao perfeita. Tudo fica melhor com voce."
+        },
+        {
+          name: "Trufa especial",
+          title: "Voce e especial",
+          message: "Tao especial quanto uma trufa, e assim que voce e para mim. Agradeco por existir na minha vida."
+        }
+      ]
+    };
+
+    const els = {
+      introView: $("introView"),
+      builderView: $("builderView"),
+      startFlowBtn: $("startFlowBtn"),
+      mainTitle: $("mainTitle"),
+      musicUrl: $("musicUrl"),
+      openExampleBtn: $("openExampleBtn"),
+      generateBtn: $("generateBtn"),
+      clearBtn: $("clearBtn"),
+      copyBtn: $("copyBtn"),
+      linkBox: $("linkBox"),
+      openGiftLink: $("openGiftLink"),
+      toast: $("toast"),
+      chocolateInputs: [...document.querySelectorAll("[data-index][data-key]")]
+    };
+
+    const requiredInputs = [
+      els.mainTitle,
+      ...els.chocolateInputs.filter((input) => input.dataset.key === "message")
+    ];
+
+    function cloneData(data) {
+      return JSON.parse(JSON.stringify(data));
+    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => els.toast.classList.remove("show"), 2200);
+    }
+
+    function encodeDataPayload(data) {
+      try {
+        const json = JSON.stringify(data || {});
+        const bytes = new TextEncoder().encode(json);
+        let binary = "";
+        bytes.forEach((byte) => {
+          binary += String.fromCharCode(byte);
+        });
+        return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+      } catch {
+        return "";
+      }
+    }
+
+    function fillForm(data) {
+      const nextData = cloneData(data || defaultData);
+      els.mainTitle.value = nextData.mainTitle || "";
+      els.musicUrl.value = [...els.musicUrl.options].some((option) => option.value === nextData.music) ? nextData.music : "";
+      els.chocolateInputs.forEach((input) => {
+        const chocolate = nextData.chocolates[Number(input.dataset.index)] || {};
+        input.value = chocolate[input.dataset.key] || "";
+      });
+      clearValidation();
+    }
+
+    function readForm() {
+      const chocolates = Array.from({ length: 4 }, (_, index) => {
+        const item = { name: "", title: "", message: "" };
+        els.chocolateInputs
+          .filter((input) => Number(input.dataset.index) === index)
+          .forEach((input) => {
+            const fallback = defaultData.chocolates[index] || defaultData.chocolates[0];
+            item[input.dataset.key] = input.value.trim() || fallback[input.dataset.key] || "";
+          });
+        return item;
+      });
+
+      return {
+        mainTitle: els.mainTitle.value.trim() || defaultData.mainTitle,
+        coverText: defaultData.coverText,
+        music: els.musicUrl.value.trim(),
+        chocolates
+      };
+    }
+
+    function clearValidation() {
+      requiredInputs.forEach((input) => input.closest(".field")?.classList.remove("is-invalid"));
+    }
+
+    function validateForm() {
+      let firstInvalid = null;
+      requiredInputs.forEach((input) => {
+        const invalid = !input.value.trim();
+        input.closest(".field")?.classList.toggle("is-invalid", invalid);
+        if (invalid && !firstInvalid) firstInvalid = input;
+      });
+
+      if (firstInvalid) {
+        firstInvalid.focus();
+        showToast("Preencha os campos obrigatorios.");
+        return false;
+      }
+
+      return true;
+    }
+
+    function buildGiftUrl(data, mode = "gift") {
+      const url = new URL("caixa/index.html", location.href);
+      const payload = encodeDataPayload(data);
+      url.hash = payload ? `${mode}?d=${payload}` : mode;
+      return url.toString();
+    }
+
+    function openExample() {
+      sessionStorage.removeItem("exampleReturnedToBuilder");
+      location.replace(buildGiftUrl(defaultData, "example"));
+    }
+
+    function generateLink() {
+      if (!validateForm()) return;
+      const giftUrl = buildGiftUrl(readForm());
+      els.linkBox.textContent = giftUrl;
+      els.linkBox.classList.add("show");
+      els.copyBtn.classList.remove("hidden");
+      els.openGiftLink.classList.remove("hidden");
+      els.openGiftLink.href = giftUrl;
+      showToast("Link gerado com sucesso.");
+    }
+
+    async function copyLink() {
+      const text = els.linkBox.textContent.trim();
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("Link copiado.");
+      } catch {
+        showToast("Nao consegui copiar automaticamente.");
+      }
+    }
+
+    function clearGeneratedLink() {
+      els.linkBox.textContent = "";
+      els.linkBox.classList.remove("show");
+      els.copyBtn.classList.add("hidden");
+      els.openGiftLink.classList.add("hidden");
+      els.openGiftLink.removeAttribute("href");
+    }
+
+    function clearForm() {
+      fillForm({ ...defaultData, mainTitle: "", music: "", chocolates: defaultData.chocolates.map(() => ({ name: "", title: "", message: "" })) });
+      clearGeneratedLink();
+    }
+
+    function handleClearForm() {
+      clearForm();
+      showToast("Campos limpos.");
+    }
+
+    function showBuilder() {
+      els.introView.classList.remove("is-active");
+      els.builderView.classList.add("is-active");
+      document.body.classList.add("is-builder-active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    els.startFlowBtn.addEventListener("click", showBuilder);
+
+    els.openExampleBtn.addEventListener("click", openExample);
+
+    requiredInputs.forEach((input) => {
+      input.addEventListener("input", () => input.closest(".field")?.classList.remove("is-invalid"));
+    });
+
+    els.generateBtn.addEventListener("click", generateLink);
+    els.clearBtn.addEventListener("click", handleClearForm);
+    els.copyBtn.addEventListener("click", copyLink);
+
+    clearForm();
+    if (location.hash === "#personalizar") showBuilder();
+  </script>
+</body>
+</html>
