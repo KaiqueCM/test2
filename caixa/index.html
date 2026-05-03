@@ -253,12 +253,14 @@
       overflow: hidden;
     }
 
-    .chocolate-box:hover .cover {
+    .chocolate-box:hover .cover,
+    .chocolate-box.is-open .cover {
       transform: rotateX(170deg);
       box-shadow: 8px -8px 32px rgba(0,0,0,.5);
     }
 
-    .chocolate-box:hover .cover:before {
+    .chocolate-box:hover .cover:before,
+    .chocolate-box.is-open .cover:before {
       display: none;
     }
 
@@ -755,16 +757,6 @@
       }
     }
 
-    @media (hover: none) and (pointer: coarse) {
-      .chocolate-box .cover {
-        transform: rotateX(170deg);
-        box-shadow: 8px -8px 32px rgba(0,0,0,.34);
-      }
-
-      .chocolate-box .cover:before {
-        display: none;
-      }
-    }
   </style>
 </head>
 <body>
@@ -935,10 +927,12 @@
 
     const giftData = readGiftDataFromUrl();
     const chocolatesData = giftData.chocolates;
+    const chocolateBox = document.querySelector(".chocolate-box");
+    const boxCover = document.getElementById("boxCover");
 
     document.title = "Presente digital";
     document.getElementById("mainTitle").textContent = giftData.mainTitle;
-    document.getElementById("boxCover").setAttribute("data-cover-text", giftData.coverText);
+    boxCover.setAttribute("data-cover-text", giftData.coverText);
     document.getElementById("backgroundMusicSource").src = giftData.music || "";
     document.getElementById("backgroundMusic").toggleAttribute("data-has-music", Boolean(giftData.music));
     $("#label-top-left").text(chocolatesData[0].name);
@@ -973,6 +967,11 @@
     function closeModal() {
       $('#loveModal').removeClass('active');
     }
+
+    boxCover.addEventListener("click", (event) => {
+      event.stopPropagation();
+      chocolateBox.classList.toggle("is-open");
+    });
 
     $('#loveModal').on('click', function(e) {
       if (e.target === this) {
